@@ -1,0 +1,41 @@
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  labels:
+    app: nginx-left
+    version: latest
+  name: nginx-left
+  namespace: default
+spec:
+  replicas: 50
+  selector:
+    app: nginx-left
+    version: latest
+  template:
+    metadata:
+      labels:
+        app: nginx-left
+        version: latest
+      name: nginx-left
+    spec:
+      containers:
+      - image: docker-registry.linaro.org/drusling/nginx:latest
+        imagePullPolicy: IfNotPresent
+        name: nginx-left
+        resources: {}
+        securityContext:
+          privileged: false
+        terminationMessagePath: /dev/termination-log
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/usr/sbin/nginx","-s","quit"]
+      dnsPolicy: Default
+      restartPolicy: Always
+      securityContext: {}
+      terminationGracePeriodSeconds: 0
+
